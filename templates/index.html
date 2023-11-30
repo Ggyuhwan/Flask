@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<!--
+	Indus by TEMPLATE STOCK
+	templatestock.co @templatestock
+	Released for free under the Creative Commons Attribution 3.0 license (templated.co/license)
+-->
+
+<html lang="en" class="no-js">
+	<head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1"> 
+        <title>Indus HTML5 Free Responsive Template | Template stock</title>
+        <!--        flask 경로설정          -->
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/bootstrap.min.css') }}" />
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/et-lineicon.css') }}" />
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/font-awesome.min.css') }}" />
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}" />
+        <link href='http://fonts.googleapis.com/css?family=Roboto:400,500,400italic,500italic,700' rel='stylesheet' type='text/css'>
+        <!--[if IE]>
+	<script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+<![endif]-->
+
+	</head>
+	<body>
+
+        <!-- Preloader -->
+        <div class="animationload">
+            <div class="loader">
+                Loading...
+            </div>
+        </div> 
+        <!-- End Preloader -->
+
+        <!-- =========================
+                 HOME
+        ========================== -->
+
+		<section id="home">
+			<div class="content">
+                <div id="large-header" class="large-header">
+                    <canvas id="demo-canvas"></canvas>
+                    <div id="countdown_dashboard" class="home-main container">
+                    <h1 class="title">악기 이미지 분류</h1>
+                        <div class="row">
+                            <!-- DAYS -->
+                            <div class="col-md-3 col-sm-3 col-s-6 dash-glob" data-scroll-reveal="enter bottom move 25px, after 0.3s">
+                                <div class="dash days_dash">
+                                    <h1 class="dash_title"></h1>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <!-- HOURS -->
+                            <div class="col-md-3 col-sm-3 col-xs-6 dash-glob" data-scroll-reveal="enter bottom move 25px, after 0.3s">
+                                <form id="uploadForm" enctype="multipart/form-data">
+                                    <input type="file" name="image" onchange="previewImage(this)">
+                                    <input type="button" value="분류하기" onclick="uploadImage()">
+                                </form>
+                            </div>
+                        </div>
+                        <div class="row">
+                        <!-- MINUTES -->
+                        <div class="col-md-3 col-sm-3 col-xs-6 dash-glob" data-scroll-reveal="enter bottom move 25px, after 0.3s">
+                            <img id="preview" width="224" height="224">
+                            <h2 id="prediction"></h2>
+                            <h2 id="top_1_prediction"></h2>
+                            <h2 id="top_2_prediction"></h2>
+
+                        </div>
+                        </div>
+                        <div class="row">
+                            <!-- SECONDS -->
+                            <div class="col-md-3 col-sm-3 col-xs-6 dash-glob" data-scroll-reveal="enter bottom move 25px, after 0.3s">
+                                <!--위키피디아로 연결-->
+    <a id="predictionLink" href=""></a>
+                                </div>
+                            </div>
+                        </div> <!-- END ROW -->
+                    </div> <!-- END COUNTDOWN -->
+                </div> <!-- LARGE HEADER -->
+            </div> <!-- END CONTENT -->
+        </section>
+
+        <!-- JAVASCRIPTS -->
+       <script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/jquery.lwtCountdown-1.0.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/jquery.stellar.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/jquery.nicescroll.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/animated.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+
+        <script>
+            function previewImage(input){
+                let file = input.files[0];
+                let reader = new FileReader();
+                reader.onload = function(e){
+                    $("#preview").attr("src", e.target.result).show();
+                }
+                reader.readAsDataURL(file);
+            }
+            function uploadImage() {
+        let formData = new FormData($("#uploadForm")[0]);
+        $.ajax({
+            type: "POST",
+            url: "/upload",
+            data: formData,
+            contentType: false,
+            processData: false,
+            success: function(res) {
+
+                // 1순위와 2순위 출력
+               $("#top_1_prediction").text("1순위: " + res.top_1_prediction + " (" + res.top1 + "%)");
+               $("#top_2_prediction").text("2순위: " + res.top_2_prediction + " (" + res.top2 + "%)");
+
+                $("#predictionLink").attr("href", "https://en.wikipedia.org/wiki/" + res.prediction).text("자세히 알아보기");
+
+            }
+        });
+    }
+        </script>
+	</body>
+</html>
